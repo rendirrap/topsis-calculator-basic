@@ -11,7 +11,7 @@ st.set_page_config(
     layout="wide"
 )
 
-# 2. CUSTOM CSS - MOBILE RESPONSIVE & MATERIAL DESIGN
+# 2. CUSTOM CSS - MOBILE RESPONSIVE & MATERIAL DESIGN LOOK
 st.markdown("""
     <style>
     /* Global Styles (Roboto / Segoe UI Font) */
@@ -21,7 +21,7 @@ st.markdown("""
         color: #212121;
     }
     
-    /* Navigation Bar Navy (#1A237E) - Ramah Mobile */
+    /* Navigation Bar Navy (#1A237E) - Ramah PC & Mobile */
     .navbar-navy {
         background-color: #1A237E;
         padding: 15px 20px;
@@ -97,7 +97,7 @@ st.markdown("""
         .winner-score { font-size: 16px; }
     }
     
-    /* Menyembunyikan padding berlebih di HP agar tidak sempit */
+    /* Mengurangi padding samping di HP agar ruang input lebih luas */
     @media (max-width: 640px) {
         .block-container {
             padding-left: 1rem !important;
@@ -146,7 +146,6 @@ with col_panel_left:
     
     updated_c_list = []
     for idx, crit in enumerate(st.session_state.c_list):
-        # Menggunakan kolom yang lebih bersahabat untuk Mobile / HP
         c_cols = st.columns([4, 3, 4, 1])
         
         c_name = c_cols[0].text_input("Name", value=crit["name"], label_visibility="collapsed", key=f"crit_name_key_{idx}")
@@ -210,10 +209,9 @@ with col_panel_right:
 st.markdown('<div class="material-card">', unsafe_allow_html=True)
 st.markdown('<div class="section-title">📋 Decision Matrix Table (X)</div>', unsafe_allow_html=True)
 
-# Agar input matriks tidak hancur di layar HP, kita gunakan st.container & st.columns per kriteria
+# Menggunakan container grid dinamis per alternatif agar fleksibel saat direndering di smartphone
 for a_idx, alt in enumerate(st.session_state.a_list):
     st.markdown(f"**{alt}**")
-    # Membuat grid dinamis yang adaptif di smartphone
     m_cols = st.columns(len(st.session_state.c_list))
     
     for c_idx, crit in enumerate(st.session_state.c_list):
@@ -290,7 +288,7 @@ if btn_compute:
         
     st.toast('Kalkulasi Berhasil Diperbarui!', icon='✅')
     
-    # Jalankan Engine Perhitungan
+    # Jalankan Perhitungan TOPSIS
     R_mat, Y_mat, A_p, A_n, D_p, D_n, V_score = run_topsis_calculation(X_matrix, W_vector, t_vector)
     
     df_ranking = pd.DataFrame({
@@ -306,7 +304,7 @@ if btn_compute:
     best_alt = df_ranking.iloc[0]['Alternative']
     best_score = df_ranking.iloc[0]['Closeness Coefficient (V)']
     
-    # Tampilan Banner Pemenang (Sudah Adaptif Ukuran Layar HP)
+    # Tampilan Banner Pemenang (Responsif HP)
     st.markdown(f"""
     <div class="winner-box">
         <div class="winner-title">🏆 Rekomendasi Solusi Optimal</div>
@@ -315,7 +313,7 @@ if btn_compute:
     </div>
     """, unsafe_allow_html=True)
     
-    # CHART PLOTLY RESPONSIF HP
+    # CHART PLOTLY SEPERTI TANGKAPAN LAYAR (TANGGUH DI HP)
     st.markdown("**Visual Closeness Coefficient Ranking Chart:**")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
@@ -334,13 +332,13 @@ if btn_compute:
         xaxis=dict(gridcolor='#F0F0F0'),
         plot_bgcolor='white',
         margin=dict(l=20, r=20, t=20, b=20),
-        height=320,  # Ukuran sedikit dikecilkan agar muat di 1 layar HP penuh
+        height=320,
         hovermode="x unified"
     )
-    # Menyembunyikan menu melayang Plotly yang mengganggu saat di-scroll pakai jari di HP
+    # Menyembunyikan floating modebar Plotly agar tidak mengganggu touch scroll di HP
     st.plotly_chart(fig, use_container_width=True, config={'displayModeBar': False})
     
-    # TABEL RANKING DENGAN HIGHLIGHT BARIS TERBAIK
+    # TABEL RANKING DENGAN HIGHLIGHT HIJAU SAGE PADA BARIS TERBAIK
     st.markdown("**Official Multi-Criteria Ranking Table:**")
     
     def highlight_row(row):
@@ -354,17 +352,23 @@ if btn_compute:
         use_container_width=True
     )
     
-    # DOWNLOAD REPORT
-    csv_report = df_ranking.to_csv().encode('utf-8')
+    # PERBAIKAN: DOWNLOAD DATA REPORT (SUDAH DIBULATKAN 4 DESIMAL AGAR RAPI DI EXCEL)
+    st.write("")
+    df_export = df_ranking.copy()
+    df_export['D+ (Ideal Positive)'] = df_export['D+ (Ideal Positive)'].round(4)
+    df_export['D- (Ideal Negative)'] = df_export['D- (Ideal Negative)'].round(4)
+    df_export['Closeness Coefficient (V)'] = df_export['Closeness Coefficient (V)'].round(4)
+    
+    csv_report = df_export.to_csv().encode('utf-8')
     st.download_button(
         label="📥 Export Report to CSV",
         data=csv_report,
         file_name='topsis_decision_report.csv',
         mime='text/csv',
-        use_container_width=True  # Tombol memenuhi lebar layar HP agar mudah ditekan jempol
+        use_container_width=True  # Lebar penuh agar mudah diklik di HP
     )
     
-    # AUDIT LOG MATEMATIKA
+    # AUDIT LOG PROSES MATEMATIKA
     st.write("")
     with st.expander("🔍 Step-by-Step Mathematical Log"):
         tb1, tb2, tb3 = st.tabs(["1. R Matrix", "2. Y Matrix", "3. Bounds"])
