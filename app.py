@@ -263,8 +263,8 @@ def run_topsis_calculation(X, W, types):
 # ==========================================
 # KOMPONEN 4: TOMBOL EKSEKUSI & HASIL AKHIR
 # ==========================================
-# PERBAIKAN: Menggunakan width='stretch' menggantikan use_container_width=True
-btn_compute = st.button("🚀 COMPUTE", width='stretch', type="primary")
+# PERBAIKAN UTAMA: Menggunakan properti penyesuaian kontainer modern sesuai standar Streamlit v1.57+
+btn_compute = st.button("🚀 COMPUTE", use_container_width="always", type="primary")
 
 if btn_compute:
     X_rows = []
@@ -336,8 +336,7 @@ if btn_compute:
         hovermode="x unified"
     )
     # Menyembunyikan floating modebar Plotly agar tidak mengganggu touch scroll di HP
-    # PERBAIKAN: Menggunakan width='stretch' menggantikan use_container_width=True
-    st.plotly_chart(fig, width='stretch', config={'displayModeBar': False})
+    st.plotly_chart(fig, use_container_width="always", config={'displayModeBar': False})
     
     # TABEL RANKING DENGAN HIGHLIGHT HIJAU SAGE PADA BARIS TERBAIK
     st.markdown("**Official Multi-Criteria Ranking Table:**")
@@ -347,11 +346,10 @@ if btn_compute:
             return ['background-color: #D1FAE5'] * len(row)
         return [''] * len(row)
         
-    # PERBAIKAN: Menggunakan width='stretch' menggantikan use_container_width=True
     st.dataframe(
         df_ranking.style.apply(highlight_row, axis=1)
         .format({'D+ (Ideal Positive)': '{:.4f}', 'D- (Ideal Negative)': '{:.4f}', 'Closeness Coefficient (V)': '{:.4f}'}),
-        width='stretch'
+        use_container_width="always"
     )
     
     # DOWNLOAD DATA REPORT (SUDAH DIBULATKAN 4 DESIMAL AGAR RAPI DI EXCEL)
@@ -362,13 +360,12 @@ if btn_compute:
     df_export['Closeness Coefficient (V)'] = df_export['Closeness Coefficient (V)'].round(4)
     
     csv_report = df_export.to_csv().encode('utf-8')
-    # PERBAIKAN: Menggunakan width='stretch' menggantikan use_container_width=True
     st.download_button(
         label="📥 Export Report to CSV",
         data=csv_report,
         file_name='topsis_decision_report.csv',
         mime='text/csv',
-        width='stretch'
+        use_container_width="always"
     )
     
     # AUDIT LOG PROSES MATEMATIKA
@@ -376,8 +373,8 @@ if btn_compute:
     with st.expander("🔍 Step-by-Step Mathematical Log"):
         tb1, tb2, tb3 = st.tabs(["1. R Matrix", "2. Y Matrix", "3. Bounds"])
         with tb1:
-            st.dataframe(pd.DataFrame(R_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), width='stretch')
+            st.dataframe(pd.DataFrame(R_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), use_container_width="always")
         with tb2:
-            st.dataframe(pd.DataFrame(Y_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), width='stretch')
+            st.dataframe(pd.DataFrame(Y_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), use_container_width="always")
         with tb3:
-            st.dataframe(pd.DataFrame([A_p, A_n], columns=c_names_list, index=['A+', 'A-']).style.format("{:.4f}"), width='stretch')
+            st.dataframe(pd.DataFrame([A_p, A_n], columns=c_names_list, index=['A+', 'A-']).style.format("{:.4f}"), use_container_width="always")
