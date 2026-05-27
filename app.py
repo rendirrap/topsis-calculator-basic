@@ -6,117 +6,139 @@ import plotly.graph_objects as go
 
 # 1. KONFIGURASI HALAMAN UTAMA
 st.set_page_config(
-    page_title="TOPSIS Calculator - Decision Radar Replica",
+    page_title="TOPSIS Calculator - Responsive Multi-Device",
     page_icon="📊",
-    layout="wide"
+    layout="wide"  # Menggunakan mode wide agar fleksibel dari PC sampai HP
 )
 
-# 2. CUSTOM CSS - MOBILE RESPONSIVE & MATERIAL DESIGN LOOK
+# 2. ADVANCED CSS - RESPONSIVE LAYOUT FOR WEB, TABLET, & MOBILE
 st.markdown("""
     <style>
-    /* Global Styles (Roboto / Segoe UI Font) */
+    /* --- GLOBAL STYLES --- */
     html, body, [data-testid="stAppViewContainer"] {
-        font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
-        background-color: #FAFAFA;
-        color: #212121;
+        font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+        background-color: #F8F9FA;
+        color: #212529;
     }
     
-    /* Navigation Bar Navy (#1A237E) - Ramah PC & Mobile */
+    /* --- NAVIGATION BAR (NAVY) --- */
     .navbar-navy {
         background-color: #1A237E;
-        padding: 15px 20px;
-        border-radius: 8px;
+        padding: 20px;
+        border-radius: 12px;
         color: white;
-        margin-bottom: 20px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        margin-bottom: 25px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
     
-    /* Material Design Card Elevation */
+    /* --- MATERIAL DESIGN CARD ELEVATION --- */
     .material-card {
         background-color: #FFFFFF;
-        padding: 20px;
-        border-radius: 8px;
-        border: 1px solid #E0E0E0;
-        box-shadow: 0 1px 3px rgba(0,0,0,0.05);
-        margin-bottom: 20px;
+        padding: 24px;
+        border-radius: 12px;
+        border: 1px solid #EAEAEA;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        margin-bottom: 25px;
     }
     
-    /* Section Headings */
+    /* --- SECTION TITLE --- */
     .section-title {
         font-size: 18px;
-        font-weight: 500;
+        font-weight: 600;
         color: #1A237E;
-        margin-bottom: 15px;
-        border-bottom: 1px solid #E0E0E0;
+        margin-bottom: 18px;
+        border-bottom: 2px solid #E8EAF6;
         padding-bottom: 8px;
     }
-
-    /* Kustomisasi tombol Streamlit agar presisi Flat/Rounded */
-    div.stButton > button {
-        border-radius: 4px !important;
-        font-weight: 500 !important;
-    }
     
-    /* Custom Styling untuk Winner Card Gradasi */
+    /* --- WINNER BOX GRADIENT --- */
     .winner-box {
         background: linear-gradient(135deg, #1A237E 0%, #311B92 100%);
         color: white;
-        padding: 25px 15px;
-        border-radius: 8px;
-        box-shadow: 0 10px 20px rgba(26, 35, 126, 0.2);
+        padding: 30px 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 24px rgba(26, 35, 126, 0.15);
         text-align: center;
-        margin-bottom: 25px;
+        margin-bottom: 30px;
     }
     .winner-title {
-        font-size: 12px;
+        font-size: 13px;
         text-transform: uppercase;
-        letter-spacing: 2px;
-        opacity: 0.8;
-        margin-bottom: 5px;
+        letter-spacing: 1.5px;
+        opacity: 0.85;
+        margin-bottom: 8px;
     }
     .winner-name {
-        font-size: 26px;
+        font-size: 32px;
         font-weight: 700;
-        margin-bottom: 10px;
+        margin-bottom: 12px;
         line-height: 1.2;
     }
     .winner-score {
-        font-size: 14px;
-        opacity: 0.9;
-        background: rgba(255, 255, 255, 0.15);
-        padding: 6px 12px;
-        border-radius: 20px;
+        font-size: 15px;
+        opacity: 0.95;
+        background: rgba(255, 255, 255, 0.2);
+        padding: 8px 16px;
+        border-radius: 30px;
         display: inline-block;
     }
 
-    /* MEDIA QUERIES UNTUK LAYAR HP (RESPONSIVE) */
-    @media (min-width: 768px) {
-        .winner-box { padding: 30px; }
-        .winner-title { font-size: 14px; }
-        .winner-name { font-size: 32px; }
-        .winner-score { font-size: 16px; }
+    /* ================================================================= */
+    /* 📱 RESPONSIVE MEDIA QUERIES (HP, TABLET, WEB)                   */
+    /* ================================================================= */
+    
+    /* 1. LAYAR SMARTPHONE / HP (Maksimal 640px) */
+    @media (max-width: 640px) {
+        /* Memaksimalkan area baca di HP dengan mengecilkan padding utama Streamlit */
+        .block-container {
+            padding-left: 0.6rem !important;
+            padding-right: 0.6rem !important;
+            padding-top: 1rem !important;
+        }
+        .material-card {
+            padding: 16px;
+            margin-bottom: 15px;
+        }
+        .winner-name {
+            font-size: 24px;
+        }
+        /* Membuat input form di HP memiliki jarak ketuk (touch target) yang lega */
+        div[data-testid="stDataFrame"] {
+            width: 100% !important;
+        }
     }
     
-    /* Mengurangi padding samping di HP agar ruang input lebih luas */
-    @media (max-width: 640px) {
+    /* 2. LAYAR TABLET (641px sampai 1024px) */
+    @media (min-width: 641px) and (max-width: 1024px) {
         .block-container {
-            padding-left: 1rem !important;
-            padding-right: 1rem !important;
+            padding-left: 2rem !important;
+            padding-right: 2rem !important;
+        }
+        .winner-name {
+            font-size: 28px;
+        }
+    }
+    
+    /* 3. LAYAR WEB / DESKTOP PC (Minimal 1025px) */
+    @media (min-width: 1025px) {
+        .block-container {
+            padding-left: 5rem !important;
+            padding-right: 5rem !important;
         }
     }
     </style>
 """, unsafe_allow_html=True)
 
-# --- NAVBAR TOP HEADER ---
+# --- NAVBAR HEADER ---
 st.markdown("""
 <div class="navbar-navy">
-    <h3 style='margin:0; font-weight:500; color:white; font-size:20px;'>📊 TOPSIS Calculator</h3>
-    <p style='margin:4px 0 0 0; opacity:0.7; font-size:12px;'>Calculate the ideal positive and negative solutions for multi-criteria decisions.</p>
+    <h3 style='margin:0; font-weight:600; color:white; font-size:22px;'>📊 TOPSIS Multi-Criteria Calculator</h3>
+    <p style='margin:6px 0 0 0; opacity:0.8; font-size:13px;'>Auto-responsive layout optimized for Mobile, Tablet, and Desktop Web.</p>
 </div>
 """, unsafe_allow_html=True)
 
 
-# 3. INITIALIZATION DATA STATE
+# 3. DATA STATE MANAGEMENT
 if 'c_list' not in st.session_state:
     st.session_state.c_list = [
         {"name": "Harga (C1)", "weight": 0.40, "type": "Cost"},
@@ -135,23 +157,25 @@ if 'matrix_cells' not in st.session_state:
 
 
 # ==========================================
-# KOMPONEN 1: DATA ENTRY - CRITERIA & ALTERNATIVES
+# PANEL DATA ENTRY (RESPONSIF: 2 KOLOM DI WEB, 1 KOLOM DI HP)
 # ==========================================
+# Di HP, objek st.columns([1, 1]) otomatis ditumpuk vertikal jika ruang tidak cukup
 col_panel_left, col_panel_right = st.columns([1, 1])
 
-# --- PANEL KIRI: LIST KRITERIA DINAMIS ---
+# --- PANEL KRITERIA ---
 with col_panel_left:
     st.markdown('<div class="material-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">📈 Criteria Setup</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">📈 Setup Kriteria</div>', unsafe_allow_html=True)
     
     updated_c_list = []
     for idx, crit in enumerate(st.session_state.c_list):
-        c_cols = st.columns([4, 3, 4, 1])
+        # Membagi kolom input internal kriteria agar proporsional di layar manapun
+        c_cols = st.columns([4, 3, 3, 1])
         
-        c_name = c_cols[0].text_input("Name", value=crit["name"], label_visibility="collapsed", key=f"crit_name_key_{idx}")
-        c_weight = c_cols[1].number_input("Weight", value=float(crit["weight"]), step=0.05, format="%.2f", label_visibility="collapsed", key=f"crit_weight_key_{idx}")
+        c_name = c_cols[0].text_input("Nama Kriteria", value=crit["name"], label_visibility="collapsed", key=f"crit_name_{idx}")
+        c_weight = c_cols[1].number_input("Bobot", value=float(crit["weight"]), step=0.05, format="%.2f", label_visibility="collapsed", key=f"crit_weight_{idx}")
         t_idx = 0 if crit["type"] == "Benefit" else 1
-        c_type = c_cols[2].selectbox("Type", ["Benefit", "Cost"], index=t_idx, label_visibility="collapsed", key=f"crit_type_key_{idx}")
+        c_type = c_cols[2].selectbox("Jenis", ["Benefit", "Cost"], index=t_idx, label_visibility="collapsed", key=f"crit_type_{idx}")
         
         if c_cols[3].button("❌", key=f"del_c_{idx}"):
             if len(st.session_state.c_list) > 1:
@@ -162,29 +186,28 @@ with col_panel_left:
     
     st.session_state.c_list = updated_c_list
     
-    if st.button("➕ Add Criteria", type="secondary"):
+    if st.button("➕ Tambah Kriteria", type="secondary", use_container_width="always"):
         new_id = len(st.session_state.c_list) + 1
         st.session_state.c_list.append({"name": f"Kriteria C{new_id}", "weight": 0.0, "type": "Benefit"})
         st.rerun()
         
     total_w = sum([c["weight"] for c in st.session_state.c_list])
     if not np.isclose(total_w, 1.0):
-        st.warning(f"⚠️ Total Weight: {total_w:.2f} (Must equal 1.00)")
+        st.warning(f"⚠️ Total Bobot: {total_w:.2f} (Wajib berjumlah 1.00)")
     else:
-        st.success("✅ Weights equal 1.00")
+        st.success("✅ Akumulasi bobot tepat 1.00")
         
     st.markdown('</div>', unsafe_allow_html=True)
 
-# --- PANEL KANAN: LIST ALTERNATIF DINAMIS ---
+# --- PANEL ALTERNATIF ---
 with col_panel_right:
     st.markdown('<div class="material-card">', unsafe_allow_html=True)
-    st.markdown('<div class="section-title">🏢 Alternatives Setup</div>', unsafe_allow_html=True)
+    st.markdown('<div class="section-title">🏢 Setup Alternatif</div>', unsafe_allow_html=True)
     
     updated_a_list = []
     for idx, alt in enumerate(st.session_state.a_list):
         a_cols = st.columns([8, 2])
-        
-        a_name = a_cols[0].text_input("Alt Name", value=alt, label_visibility="collapsed", key=f"alt_name_key_{idx}")
+        a_name = a_cols[0].text_input("Nama Alternatif", value=alt, label_visibility="collapsed", key=f"alt_name_{idx}")
         
         if a_cols[1].button("❌", key=f"del_a_{idx}"):
             if len(st.session_state.a_list) > 1:
@@ -195,7 +218,7 @@ with col_panel_right:
         
     st.session_state.a_list = updated_a_list
     
-    if st.button("➕ Add Alternative", type="secondary"):
+    if st.button("➕ Tambah Alternatif", type="secondary", use_container_width="always"):
         new_char = chr(65 + len(st.session_state.a_list)) if len(st.session_state.a_list) < 26 else str(len(st.session_state.a_list)+1)
         st.session_state.a_list.append(f"Alternatif {new_char}")
         st.rerun()
@@ -204,35 +227,36 @@ with col_panel_right:
 
 
 # ==========================================
-# KOMPONEN 2: MATRIKS KEPUTUSAN (X) DINAMIS
+# MATRIKS KEPUTUSAN DINAMIS (BERADAPTASI OTOMATIS)
 # ==========================================
 st.markdown('<div class="material-card">', unsafe_allow_html=True)
-st.markdown('<div class="section-title">📋 Decision Matrix Table (X)</div>', unsafe_allow_html=True)
+st.markdown('<div class="section-title">📋 Isi Nilai Matriks Keputusan (X)</div>', unsafe_allow_html=True)
 
 for a_idx, alt in enumerate(st.session_state.a_list):
-    st.markdown(f"**{alt}**")
-    m_cols = st.columns(len(st.session_state.c_list))
+    st.markdown(f"🔹 **{alt}**")
     
+    # Grid dinamis mengikuti jumlah kriteria yang aktif
+    m_cols = st.columns(len(st.session_state.c_list))
     for c_idx, crit in enumerate(st.session_state.c_list):
         cell_key = (alt, crit["name"])
         val_default = st.session_state.matrix_cells.get(cell_key, 0.0)
         
         with m_cols[c_idx]:
             new_val = st.number_input(
-                f"{crit['name']} ({crit['type'][:4]})", 
+                f"{crit['name']} ({crit['type'][:3]})", 
                 value=float(val_default), 
                 min_value=0.0, 
                 step=1.0, 
-                key=f"input_matrix_cell_{alt}_{crit['name']}"
+                key=f"cell_{alt}_{crit['name']}"
             )
             st.session_state.matrix_cells[cell_key] = new_val
-    st.markdown("<div style='margin-bottom:15px;'></div>", unsafe_allow_html=True)
+    st.markdown("<div style='margin-bottom:10px;'></div>", unsafe_allow_html=True)
 
 st.markdown('</div>', unsafe_allow_html=True)
 
 
 # ==========================================
-# KOMPONEN 3: CORE TOPSIS MATHEMATICS ENGINE
+# ENGINE MATEMATIKA TOPSIS Core
 # ==========================================
 def run_topsis_calculation(X, W, types):
     divider = np.sqrt(np.sum(X**2, axis=0))
@@ -261,10 +285,9 @@ def run_topsis_calculation(X, W, types):
 
 
 # ==========================================
-# KOMPONEN 4: TOMBOL EKSEKUSI & HASIL AKHIR
+# EKSEKUSI DAN OUTPUT RESPONSIF (WEB, TABLET, HP)
 # ==========================================
-# PERBAIKAN UTAMA: Menggunakan properti penyesuaian kontainer modern sesuai standar Streamlit v1.57+
-btn_compute = st.button("🚀 COMPUTE", use_container_width="always", type="primary")
+btn_compute = st.button("🚀 HITUNG SEKARANG", use_container_width="always", type="primary")
 
 if btn_compute:
     X_rows = []
@@ -281,40 +304,37 @@ if btn_compute:
     
     st.write("---")
     
-    with st.status("Memproses Komputasi...", expanded=False) as status:
-        st.write("🔄 Menghitung Jarak Solusi Ideal...")
-        time.sleep(0.1)
-        status.update(label="Selesai!", state="complete")
+    with st.status("Menghitung Algoritma TOPSIS...", expanded=False) as status:
+        time.sleep(0.2)
+        status.update(label="Kalkulasi Selesai!", state="complete")
         
-    st.toast('Kalkulasi Berhasil Diperbarui!', icon='✅')
-    
-    # Jalankan Perhitungan TOPSIS
+    # Ambil hasil kalkulasi
     R_mat, Y_mat, A_p, A_n, D_p, D_n, V_score = run_topsis_calculation(X_matrix, W_vector, t_vector)
     
     df_ranking = pd.DataFrame({
         'Alternative': st.session_state.a_list,
-        'D+ (Ideal Positive)': D_p,
-        'D- (Ideal Negative)': D_n,
+        'D+ (Ideal Positif)': D_p,
+        'D- (Ideal Negatif)': D_n,
         'Closeness Coefficient (V)': V_score
     }).sort_values(by='Closeness Coefficient (V)', ascending=False).reset_index(drop=True)
     
     df_ranking.index = df_ranking.index + 1
-    df_ranking.index.name = 'Rank'
+    df_ranking.index.name = 'Peringkat'
     
     best_alt = df_ranking.iloc[0]['Alternative']
     best_score = df_ranking.iloc[0]['Closeness Coefficient (V)']
     
-    # Tampilan Banner Pemenang (Responsif HP)
+    # 🏆 Banner Rekomendasi Utama (Responsif via CSS)
     st.markdown(f"""
     <div class="winner-box">
-        <div class="winner-title">🏆 Rekomendasi Solusi Optimal</div>
+        <div class="winner-title">🏆 Solusi Alternatif Terbaik</div>
         <div class="winner-name">{best_alt}</div>
         <div class="winner-score">Nilai Kedekatan Relatif (V) = {best_score:.4f}</div>
     </div>
     """, unsafe_allow_html=True)
     
-    # CHART PLOTLY SEPERTI TANGKAPAN LAYAR (TANGGUH DI HP)
-    st.markdown("**Visual Closeness Coefficient Ranking Chart:**")
+    # 📈 Chart Plotly Responsif Lintas Layar
+    st.markdown("📈 **Grafik Nilai Kedekatan Kedekatan (V Score):**")
     fig = go.Figure()
     fig.add_trace(go.Scatter(
         x=df_ranking['Alternative'],
@@ -322,59 +342,52 @@ if btn_compute:
         mode='lines+markers',
         line=dict(color='#1A237E', width=3),
         marker=dict(size=10, color='#1A237E'),
-        name='Closeness'
+        name='Nilai V'
     ))
     
     fig.update_layout(
-        xaxis_title="Alternative",
-        yaxis_title="V Score",
-        yaxis=dict(range=[0, 1.05], dtick=0.2, gridcolor='#E0E0E0'),
-        xaxis=dict(gridcolor='#F0F0F0'),
+        yaxis=dict(range=[0, 1.05], dtick=0.2, gridcolor='#EAEAEA'),
+        xaxis=dict(gridcolor='#F5F5F5'),
         plot_bgcolor='white',
-        margin=dict(l=20, r=20, t=20, b=20),
-        height=320,
+        margin=dict(l=25, r=25, t=15, b=15),
+        height=280,  # Tinggi ideal agar pas di layar HP tanpa scroll terlalu jauh
         hovermode="x unified"
     )
-    # Menyembunyikan floating modebar Plotly agar tidak mengganggu touch scroll di HP
+    # use_container_width="always" mengamankan grafik agar melebar proporsional mengikuti lebar kontainer alat
     st.plotly_chart(fig, use_container_width="always", config={'displayModeBar': False})
     
-    # TABEL RANKING DENGAN HIGHLIGHT HIJAU SAGE PADA BARIS TERBAIK
-    st.markdown("**Official Multi-Criteria Ranking Table:**")
+    # 📊 Tabel Hasil Akhir dengan Fitur Penanda Warna Baris Teratas
+    st.markdown("📊 **Tabel Hasil Pemeringkatan Resmi:**")
     
-    def highlight_row(row):
+    def highlight_best(row):
         if row['Alternative'] == best_alt:
-            return ['background-color: #D1FAE5'] * len(row)
+            return ['background-color: #E8F5E9; font-weight: bold; color: #2E7D32'] * len(row)
         return [''] * len(row)
         
     st.dataframe(
-        df_ranking.style.apply(highlight_row, axis=1)
-        .format({'D+ (Ideal Positive)': '{:.4f}', 'D- (Ideal Negative)': '{:.4f}', 'Closeness Coefficient (V)': '{:.4f}'}),
+        df_ranking.style.apply(highlight_best, axis=1)
+        .format({'D+ (Ideal Positif)': '{:.4f}', 'D- (Ideal Negatif)': '{:.4f}', 'Closeness Coefficient (V)': '{:.4f}'}),
         use_container_width="always"
     )
     
-    # DOWNLOAD DATA REPORT (SUDAH DIBULATKAN 4 DESIMAL AGAR RAPI DI EXCEL)
-    st.write("")
+    # 📥 Fitur Ekspor Data CSV (Lebar Penuh di HP)
     df_export = df_ranking.copy()
-    df_export['D+ (Ideal Positive)'] = df_export['D+ (Ideal Positive)'].round(4)
-    df_export['D- (Ideal Negative)'] = df_export['D- (Ideal Negative)'].round(4)
-    df_export['Closeness Coefficient (V)'] = df_export['Closeness Coefficient (V)'].round(4)
-    
     csv_report = df_export.to_csv().encode('utf-8')
     st.download_button(
-        label="📥 Export Report to CSV",
+        label="📥 Download Laporan Hasil (CSV)",
         data=csv_report,
-        file_name='topsis_decision_report.csv',
+        file_name='Laporan_TOPSIS_Responsive.csv',
         mime='text/csv',
         use_container_width="always"
     )
     
-    # AUDIT LOG PROSES MATEMATIKA
+    # 🔍 Tab Log Matematika Audit Transparan
     st.write("")
-    with st.expander("🔍 Step-by-Step Mathematical Log"):
-        tb1, tb2, tb3 = st.tabs(["1. R Matrix", "2. Y Matrix", "3. Bounds"])
-        with tb1:
+    with st.expander("🔍 Log Langkah Perhitungan Matematis (Audit Data)"):
+        t_b1, t_b2, t_b3 = st.tabs(["Matriks R (Normalisasi)", "Matriks Y (Terbobot)", "Nilai Solusi Ideal"])
+        with t_b1:
             st.dataframe(pd.DataFrame(R_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), use_container_width="always")
-        with tb2:
+        with t_b2:
             st.dataframe(pd.DataFrame(Y_mat, columns=c_names_list, index=st.session_state.a_list).style.format("{:.4f}"), use_container_width="always")
-        with tb3:
-            st.dataframe(pd.DataFrame([A_p, A_n], columns=c_names_list, index=['A+', 'A-']).style.format("{:.4f}"), use_container_width="always")
+        with t_b3:
+            st.dataframe(pd.DataFrame([A_p, A_n], columns=c_names_list, index=['A+ (Ideal Positif)', 'A- (Ideal Negatif)']).style.format("{:.4f}"), use_container_width="always")
